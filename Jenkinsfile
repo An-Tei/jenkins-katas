@@ -1,6 +1,18 @@
 pipeline {
   agent any
   stages {
+    stage('clone down') {
+      agent {
+        node {
+          label 'host'
+        }
+
+      }
+      steps {
+        stash(name: 'code', excludes: '.git')
+      }
+    }
+
     stage('Parallel rund') {
       parallel {
         stage('Say Hello') {
@@ -19,14 +31,14 @@ pipeline {
           steps {
             sh 'ci/build-app.sh'
             archiveArtifacts 'app/build/libs/'
-            echo "Testübung Löschen"
-            echo "List vor dem Löschen"
+            echo 'Testübung Löschen'
+            echo 'List vor dem Löschen'
             sh 'ls -al'
-            echo "Löschen"
+            echo 'Löschen'
             deleteDir()
-            echo "List nach dem Löschen"
+            echo 'List nach dem Löschen'
             sh 'ls -al'
-	  }
+          }
         }
 
       }
